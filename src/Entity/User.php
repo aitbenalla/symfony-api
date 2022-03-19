@@ -7,6 +7,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Controller\ProfileController;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,14 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ORM\Entity(repositoryClass: UserRepository::class),
     ApiResource(
         collectionOperations: [
-            'profile' => [
-                'pagination_enabled' => false,
-                'path' => '/profile',
-                'method' => 'get',
-                'controller' => ProfileController::class,
-                'read' => false,
-                'openapi_context' => ['security'=>['cookieAuth'=>[]]],
-            ]
+
         ],
         itemOperations: [
             'get' => [
@@ -30,6 +24,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'openapi_context' => ['summary'=>'hidden'],
                 'read' => false,
                 'output' => false
+            ],
+            'profile' => [
+                'pagination_enabled' => false,
+                'path' => '/profile',
+                'method' => 'get',
+                'controller' => ProfileController::class,
+                'read' => false,
+                'openapi_context' => [
+                    'security' => [['bearerAuth' => []]]
+                ],
+//                'openapi_context' => ['security'=>['cookieAuth'=>[]]],
             ]
         ],
         normalizationContext: ['groups' => ['read:user']],
@@ -37,7 +42,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
     )
 ]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -83,6 +88,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
     /**
      * @see UserInterface
      */
@@ -124,5 +134,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public static function createFromPayload($username, array $payload)
+    {
+        return (new User())->setEmail($username);
+//        $user = new User();
+//        $user->setEmail($username);
+//        return $user;
     }
 }

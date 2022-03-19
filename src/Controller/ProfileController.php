@@ -13,6 +13,7 @@ class ProfileController extends AbstractController
 
     public function __invoke(): ?\Symfony\Component\Security\Core\User\UserInterface
     {
+        dd($this->security->getUser());
         return $this->security->getUser();
     }
 }

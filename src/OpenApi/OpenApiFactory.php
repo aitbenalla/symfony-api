@@ -28,10 +28,15 @@ class OpenApiFactory implements OpenApiFactoryInterface
         }
         //$openApi->getPaths()->addPath('/ping', new PathItem(null, 'Ping', 'Get Ping', new Operation('ping-id',[],[],'Get Ping')));
         $schemas = $openApi->getComponents()->getSecuritySchemes();
-        $schemas['cookieAuth'] = new \ArrayObject([
-            'type' => 'apiKey',
-            'in' => 'cookie',
-            'name' => 'PHPSESSID'
+//        $schemas['cookieAuth'] = new \ArrayObject([
+//            'type' => 'apiKey',
+//            'in' => 'cookie',
+//            'name' => 'PHPSESSID'
+//        ]);
+        $schemas['bearerAuth'] = new \ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'name' => 'JWT'
         ]);
 
         $schemas = $openApi->getComponents()->getSchemas();
@@ -48,6 +53,10 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ]
             ]
         ]);
+
+        $profileOperation = $openApi->getPaths()->getPath('/api/profile')->getGet()->withParameters([]);
+        $profilePathItem = $openApi->getPaths()->getPath('/api/profile')->withGet($profileOperation);
+        $openApi->getPaths()->addPath('/api/profile', $profilePathItem);
 
         $pathItem = new PathItem(
 
@@ -79,6 +88,19 @@ class OpenApiFactory implements OpenApiFactoryInterface
         );
 
         $openApi->getPaths()->addPath('/api/login', $pathItem);
+
+        $pathItem = new PathItem(
+
+            post: new Operation(
+                operationId: 'postApiLogout',
+                tags: (array)'User',
+                responses: [
+                    '204' => []
+                ]
+            )
+        );
+
+        $openApi->getPaths()->addPath('/logout', $pathItem);
 
         return $openApi;
     }
