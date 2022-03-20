@@ -13,6 +13,10 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
+#        apikey_user_provider:
+#            entity:
+#                class: App\Entity\User
+#                property: apiKey
         jwt:
             lexik_jwt:
                 class: App\Entity\User
@@ -20,6 +24,15 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+#        main:
+#            provider: apikey_user_provider
+#            custom_authenticators:
+#                - App\Security\ApiKeyAuthenticator
+        api_token_refresh:
+            pattern: ^/api/token/refresh
+            stateless: true
+            refresh_jwt:
+                provider: app_user_provider
         login:
             provider: app_user_provider
             pattern: ^/api/login
@@ -33,14 +46,14 @@ security:
             pattern: ^/api
             stateless: true
             jwt: ~
-#        main:
-#            lazy: true
-#            provider: app_user_provider
-#            json_login:
-#                check_path: api_login
-#            logout:
-#                path: app_logout
-#            custom_authenticator: App\Security\AppAuthenticator
+        main:
+            lazy: true
+            provider: app_user_provider
+            json_login:
+                check_path: api_login
+            logout:
+                path: app_logout
+            custom_authenticator: App\Security\AppAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

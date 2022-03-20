@@ -54,6 +54,16 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ]
         ]);
 
+        $schemas['Token'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'readOnly' => true
+                ]
+            ]
+        ]);
+
         $profileOperation = $openApi->getPaths()->getPath('/api/profile')->getGet()->withParameters([]);
         $profilePathItem = $openApi->getPaths()->getPath('/api/profile')->withGet($profileOperation);
         $openApi->getPaths()->addPath('/api/profile', $profilePathItem);
@@ -65,11 +75,11 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 tags: (array)'User',
                 responses: [
                     '200' => [
-                        'description' => 'User Connected!',
+                        'description' => 'Token JWT',
                         'content' => [
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/User-read.user'
+                                    '$ref' => '#/components/schemas/Token'
                                 ]
                             ]
                         ]

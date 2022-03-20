@@ -61,6 +61,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[ORM\Column(type: 'string')]
     private $password;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $apiKey;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -142,5 +145,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
 //        $user = new User();
 //        $user->setEmail($username);
 //        return $user;
+    }
+
+    public function getApiKey(): ?string
+    {
+        return $this->apiKey;
+    }
+
+    public function setApiKey(?string $apiKey): self
+    {
+        $this->apiKey = $apiKey;
+
+        return $this;
     }
 }
