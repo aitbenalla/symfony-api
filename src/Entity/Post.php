@@ -119,7 +119,7 @@ class Post implements UserOwnedInterface
 
     #[
         ORM\Column(type: 'boolean', options: ['default' => "0"]),
-        Groups(['read:posts']),
+        Groups(['read:posts:User']),
         ApiProperty(openapiContext: ['type'=>'boolean', 'description'=>'Change Post Status'])]
     private $online;
 

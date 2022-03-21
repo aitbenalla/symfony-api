@@ -29,6 +29,7 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
 
     private function addWhere(string $resourceClass, QueryBuilder $queryBuilder)
     {
+
         $reflectionClass = new \ReflectionClass($resourceClass);
         if ($reflectionClass->implementsInterface(UserOwnedInterface::class))
             $alias = $queryBuilder->getRootAliases()[0];
