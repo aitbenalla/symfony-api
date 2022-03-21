@@ -17,9 +17,9 @@ security:
 #            entity:
 #                class: App\Entity\User
 #                property: apiKey
-        jwt:
-            lexik_jwt:
-                class: App\Entity\User
+#        jwt:
+#            lexik_jwt:
+#                class: App\Entity\User
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -28,24 +28,24 @@ security:
 #            provider: apikey_user_provider
 #            custom_authenticators:
 #                - App\Security\ApiKeyAuthenticator
-        api_token_refresh:
-            pattern: ^/api/token/refresh
-            stateless: true
-            refresh_jwt:
-                provider: app_user_provider
-        login:
-            provider: app_user_provider
-            pattern: ^/api/login
-            stateless: true
-            json_login:
-                check_path: /api/login
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        api:
-            provider: jwt
-            pattern: ^/api
-            stateless: true
-            jwt: ~
+#        api_token_refresh:
+#            pattern: ^/api/token/refresh
+#            stateless: true
+#            refresh_jwt:
+#                provider: app_user_provider
+#        login:
+#            provider: app_user_provider
+#            pattern: ^/api/login
+#            stateless: true
+#            json_login:
+#                check_path: /api/login
+#                success_handler: lexik_jwt_authentication.handler.authentication_success
+#                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+#        api:
+#            provider: jwt
+#            pattern: ^/api
+#            stateless: true
+#            jwt: ~
         main:
             lazy: true
             provider: app_user_provider

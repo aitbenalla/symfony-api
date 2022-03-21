@@ -77,13 +77,13 @@ use Symfony\Component\Validator\Constraints\Valid;
     ],
     denormalizationContext: ['groups' => ['write:post']],
     normalizationContext: ['groups' => ['read:posts'], 'openapi_definition_name'=>'Collection'],
-    paginationClientItemsPerPage: true,
-    paginationItemsPerPage: 2,
-    paginationMaximumItemsPerPage: 2
+//    paginationClientItemsPerPage: true,
+//    paginationItemsPerPage: 2,
+//    paginationMaximumItemsPerPage: 2
 ),
     ApiFilter(SearchFilter::class, properties: ['id' => 'exact','title' => 'partial'])
 ]
-class Post
+class Post implements UserOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -122,6 +122,9 @@ class Post
         Groups(['read:posts']),
         ApiProperty(openapiContext: ['type'=>'boolean', 'description'=>'Change Post Status'])]
     private $online;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
+    private $user;
 
     public function __construct()
     {
@@ -220,6 +223,18 @@ class Post
     public function setOnline(bool $online): self
     {
         $this->online = $online;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
